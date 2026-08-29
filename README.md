@@ -168,7 +168,62 @@ And these are refused, on purpose — read what it says:
 Words like flask, marble and maroon appear nowhere in the code. Try your own
 and see what it makes of them.
 
-## 7. Cleaning up
+## 7. Phase 2 — the same system with a camera
+
+Stop the launch in Terminal 1 with `Ctrl+C`, then start the other one:
+
+```bash
+ros2 launch agentic_arm perception.launch.py
+```
+
+Two new lines appear at startup:
+
+```
+synthetic camera 640x480, fx=531.4, 5 Hz
+seeing 10 objects, plus 3 known fixtures
+```
+
+(3 fixtures = tray, shelf and the table.)
+
+Now send exactly the same instruction as before. It behaves the same way.
+
+The difference is where the world came from. In Phase 1 the robot was told
+where everything is. Now a camera measured it, and every position is a few
+millimetres off as a result.
+
+### Seeing what the camera sees
+
+In RViz, click **Add** at the bottom of the Displays panel, choose
+**By topic**, then pick these two:
+
+| topic | display | what appears |
+|---|---|---|
+| `/camera/color/image_raw` | Image | a panel showing what the camera renders |
+| `/detected_markers` | MarkerArray | white outlines around everything perception believes it has found |
+
+The outlines sit almost on top of the solid objects. Zoom in and you can see
+the gap. That gap is what measurement costs.
+
+### Proving which phase you are in
+
+```bash
+ros2 topic info /world_state
+```
+
+Phase 1 says the publisher is `scene_node`. Phase 2 says it is
+`perception_node`. Same topic, same message, different source — and not one
+line of the planner, executor or arm node changed between them.
+
+## 8. Useful while it runs
+
+```bash
+ros2 node list
+ros2 topic list
+ros2 topic info /world_state
+ros2 topic echo /task_plan
+```
+
+## 9. Cleaning up
 
 ```bash
 docker compose down        # stop and remove the container
