@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<!--
+  Wraps the stock ur_description UR5e and bolts on two things it does not have.
+
+  1. gripper_link  - a 5 cm box at the tool flange. This is the frame the IK
+                     solver aims and the frame picked objects get reparented to.
+  2. camera_link   - a static RGB-D camera on a tripod looking down at the
+                     workspace. The transform below MUST match how you
+                     physically positioned the camera when you recorded the
+                     bag. Measure it. Do not eyeball it.
+-->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="ur5e_gripper">
+
+  <xacro:arg name="ur_type" default="ur5e"/>
+
+  <!-- Pull in the official UR macro -->
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+  <xacro:arg name="joint_limit_params"
+             default="$(find ur_description)/config/$(arg ur_type)/joint_limits.yaml"/>
+  <xacro:arg name="kinematics_params"
+             default="$(find ur_description)/config/$(arg ur_type)/default_kinematics.yaml"/>
+  <xacro:arg name="physical_params"
+             default="$(find ur_description)/config/$(arg ur_type)/physical_parameters.yaml"/>
+  <xacro:arg name="visual_params"
+             default="$(find ur_description)/config/$(arg ur_type)/visual_parameters.yaml"/>
+
+  <link name="world"/>
+
+  <xacro:ur_robot
+      name="$(arg ur_type)"
+      tf_prefix=""
+      parent="world"
+      joint_limits_parameters_file="$(arg joint_limit_params)"
+      kinematics_parameters_file="$(arg kinematics_params)"
+      physical_parameters_file="$(arg physical_params)"
+      visual_parameters_file="$(arg visual_params)"
+      safety_limits="false">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </xacro:ur_robot>
+
+  <!-- ================= gripper ================= -->
+  <link name="gripper_link">
+    <visual>
+      <origin xyz="0 0 0.025"/>
+      <geometry><box size="0.06 0.06 0.05"/></geometry>
+      <material name="grip_grey"><color rgba="0.25 0.25 0.28 1"/></material>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.025"/>
+      <geometry><box size="0.06 0.06 0.05"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="0.3"/>
+      <inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4"/>
+    </inertial>
+  </link>
+
+  <joint name="tool0-gripper" type="fixed">
+    <parent link="tool0"/>
+    <child  link="gripper_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Point at the very tip. IK targets this. -->
+  <link name="grasp_point"/>
+  <joint name="gripper-grasp" type="fixed">
+    <parent link="gripper_link"/>
+    <child  link="grasp_point"/>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================= table ================= -->
+  <link name="table_link">
+    <visual>
+      <origin xyz="0.55 0 -0.01"/>
+      <geometry><box size="0.9 1.2 0.02"/></geometry>
+      <material name="table_wood"><color rgba="0.55 0.42 0.30 1"/></material>
+    </visual>
+  </link>
+  <joint name="world-table" type="fixed">
+    <parent link="world"/>
+    <child  link="table_link"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================= camera =================
+       MEASURE THIS. Every deprojected object pose inherits this error.
+       Default below: 1.2 m above the table, 0.55 m forward, pitched down 90 deg.
+  -->
+  <link name="camera_link">
+    <visual>
+      <geometry><box size="0.09 0.025 0.025"/></geometry>
+      <material name="cam_black"><color rgba="0.1 0.1 0.1 1"/></material>
+    </visual>
+  </link>
+  <joint name="world-camera" type="fixed">
+    <parent link="world"/>
+    <child  link="camera_link"/>
+    <origin xyz="0.55 0.0 1.20" rpy="0 1.5708 0"/>
+  </joint>
+
+  <!-- Optical frame. REP-103: z forward, x right, y down.
+       Forgetting this rotation is the single most common TF bug in
+       camera pipelines. Depth images are published in the OPTICAL frame. -->
+  <link name="camera_optical_frame"/>
+  <joint name="camera-optical" type="fixed">
+    <parent link="camera_link"/>
+    <child  link="camera_optical_frame"/>
+    <origin xyz="0 0 0" rpy="-1.5708 0 -1.5708"/>
+  </joint>
+
+</robot>

@@ -1,0 +1,64 @@
+Panels:
+  - Class: rviz_common/Displays
+    Name: Displays
+    Property Tree Widget:
+      Expanded: ~
+    Tree Height: 700
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Class: rviz_default_plugins/Grid
+      Name: Grid
+      Enabled: true
+      Cell Size: 0.25
+      Plane Cell Count: 12
+      Color: 90; 90; 90
+    - Class: rviz_default_plugins/RobotModel
+      Name: RobotModel
+      Enabled: true
+      Description Topic:
+        Value: /robot_description
+        Durability Policy: Transient Local
+      Visual Enabled: true
+      Collision Enabled: false
+    - Class: rviz_default_plugins/TF
+      Name: TF
+      Enabled: true
+      Show Axes: true
+      Show Names: false
+      Marker Scale: 0.15
+    - Class: rviz_default_plugins/Marker
+      Name: GoalMarker
+      Enabled: true
+      Topic:
+        Value: /goal_marker
+    - Class: rviz_default_plugins/MarkerArray
+      Name: SceneObjects
+      Enabled: true
+      Topic:
+        Value: /scene_markers
+  Global Options:
+    Background Color: 40; 42; 48
+    Fixed Frame: world
+    Frame Rate: 30
+  Tools:
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/FocusCamera
+  Value: true
+  Views:
+    Current:
+      Class: rviz_default_plugins/Orbit
+      Name: Current View
+      Distance: 2.4
+      Focal Point:
+        X: 0.45
+        Y: 0
+        Z: 0.3
+      Pitch: 0.42
+      Yaw: 5.6
+    Saved: ~
+Window Geometry:
+  Height: 900
+  Width: 1500
+  Displays:
+    collapsed: false
