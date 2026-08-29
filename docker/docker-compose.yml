@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  agentic_ws:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        BUILDKIT_INLINE_CACHE: 1
+    environment:
+      - DISPLAY=${DISPLAY:-:0}  # For GUI applications like rviz2
+    # Mount the host workspace and enable X11 for GUI tools (rviz)
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - ${HOME}/.Xauthority:/root/.Xauthority:rw
+      - ..:/agent_ws/src:rw
+    working_dir: /agent_ws
+    # Run processes as root (the image default).
+    # Note: files written into the mounted workspace will be owned by root on the host.
+    # To run as the host user instead, uncomment the line below and export UID/GID first.
+    # user: "${UID:-1000}:${GID:-1000}"
+    stdin_open: true
+    tty: true
+    network_mode: "host"  # Required for ROS2 discovery and robot communication
+    # privileged: true  # Enable only if hardware access is required
+    restart: unless-stopped
