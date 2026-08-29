@@ -16,8 +16,8 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - ${HOME}/.Xauthority:/root/.Xauthority:rw
-      - ..:/agent_ws/src:rw
-    working_dir: /agent_ws
+      - ..:/agentic_ws/src:rw
+    working_dir: /agentic_ws
     # Run processes as root (the image default).
     # Note: files written into the mounted workspace will be owned by root on the host.
     # To run as the host user instead, uncomment the line below and export UID/GID first.
