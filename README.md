@@ -20,10 +20,9 @@ already done for you here.
 
 ## Demo
 
-https://github.com/roboticswithjulia/agentic_robotics_with_ros2/raw/main/media/output.mp4
+![The robot arm executing a natural-language instruction end to end](media/demo.gif)
 
-The robot arm executing a natural-language instruction end to end:
-[media/output.mp4](media/output.mp4).
+Full-resolution video: [media/output.mp4](media/output.mp4)
 
 ## 1. Build the image and start the container
 
