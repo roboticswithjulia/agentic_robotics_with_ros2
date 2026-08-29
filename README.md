@@ -18,6 +18,13 @@ translate directly: wherever it says `/opt/ros/humble`, this container uses
 `/opt/ros/jazzy` — and its "two lines at the top of every terminal" are
 already done for you here.
 
+## Demo
+
+https://github.com/roboticswithjulia/agentic_robotics_with_ros2/raw/main/media/output.mp4
+
+The robot arm executing a natural-language instruction end to end:
+[media/output.mp4](media/output.mp4).
+
 ## 1. Build the image and start the container
 
 ```bash
