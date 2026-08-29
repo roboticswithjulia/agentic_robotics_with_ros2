@@ -56,8 +56,8 @@ Verifying ROS
 Once the container is running you can open a shell into it and verify a basic ROS 2 setup:
 
 ```bash
-# open an interactive shell (service name: unitree_ros)
-docker compose exec unitree_ros bash
+# open an interactive shell (service name: agentic_ws)
+docker compose exec agentic_ws bash
 
 # inside the container
 source /opt/ros/jazzy/setup.bash
