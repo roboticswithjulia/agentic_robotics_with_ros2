@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  agentic_ws:
+  agentic_ws_2:
     build:
       context: ..
       dockerfile: docker/Dockerfile
@@ -9,6 +9,9 @@ services:
         BUILDKIT_INLINE_CACHE: 1
     environment:
       - DISPLAY=${DISPLAY:-:0}  # For GUI applications like rviz2
+      - NVIDIA_DRIVER_CAPABILITIES=all  # compute + graphics: CUDA and GL/RViz acceleration
+    # GPU access - requires nvidia-container-toolkit on the host
+    # gpus: all
     # Mount the host workspace and enable X11 for GUI tools (rviz)
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
